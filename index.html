@@ -14,10 +14,11 @@
 </head>
 
 <body class="bg-dark">
+    <img src="image/image1.jpg" id="mainImg" hidden>
     <div id="Frame" class="container" style>
-        <img src="image/image1.jpg" id="mainImg" hidden>
+
     </div>
-    <button  type="button" class="btn btn-primary" onclick="confusionImg()">打亂</button>
+    <button type="button" class="btn btn-primary" onclick="confusionImg()">打亂</button>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.js"
@@ -172,17 +173,17 @@
         }
         function determineResult() {
             /* 判斷答案是否正確 */
-            var a=new Array();
+            var a = new Array();
             var imgframe = document.getElementsByClassName("imgFrame");
-            for(var i=0;i<imgframe.length;i++){
-                if(imgframe[i].id==String(i)){
-                    a[i]="T";
+            for (var i = 0; i < imgframe.length; i++) {
+                if (imgframe[i].id == String(i)) {
+                    a[i] = "T";
                 }
-                else{
-                    a[i]="F";
+                else {
+                    a[i] = "F";
                 }
             }
-            if(!(a.includes("F"))){
+            if (!(a.includes("F"))) {
                 alert("恭喜你答對了");
             }
         }
