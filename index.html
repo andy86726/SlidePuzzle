@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>圖片拚圖</title>
+</head>
+
+<body class="bg-dark">
+    <div id="Frame" class="container" style>
+        <img src="image/image1.jpg" id="mainImg" hidden>
+    </div>
+    <button  type="button" class="btn btn-primary" onclick="confusionImg()">打亂</button>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+
+            /* 取得圖片的大小並修改 */
+            var newImg = document.getElementById("mainImg");
+            var imgWidth = newImg.width;
+            var imgHeight = newImg.height;
+            newImg.width = imgWidth / 2;
+            newImg.height = imgHeight / 2;
+            creatFrame();
+            frameSize();
+            imgSize();
+            imgFrame();
+            function creatFrame() {
+                /* 建立框架 */
+
+                var k = 0;
+                var rowFrame = document.createElement("div");
+                rowFrame.className = "row";
+                for (var i = 0; i < 4; i++) {
+                    for (var j = 0; j < 4; j++) {
+                        $("<div class='position-absolute'></div>")
+                            .addClass("imgFrame card rounded-0")
+                            .css('overflow', 'hidden')
+                            .css('top', (i * (imgHeight / 4)) + "px")
+                            .css('left', (j * (imgWidth / 4)) + "px")
+                            .attr('id', k)
+                            .append($("<div style='margin:" + (-i * (imgHeight / 4)) + "px 0 0 " + (-j * (imgWidth / 4)) + "px;'></div>")
+                                .addClass("imgMove")
+                                .html('<img class="img" src="' + newImg.src + '" alt="404NotFound" style= />'))
+                            .appendTo(rowFrame);
+                        k++;
+                    }
+                }
+                document.getElementById("Frame").appendChild(rowFrame);
+            }
+            function frameSize() {
+                /* 改變最外框的大小 */
+                document.getElementById("Frame").style.width = (imgWidth + 30) + "px";
+                document.getElementById("Frame").style.height = imgHeight + "px";
+            }
+            function imgSize() {
+                /* 改變圖片的大小及設定網址 */
+                var imgArray = document.getElementsByClassName("img");
+                for (var i = 0; i < imgArray.length; i++) {
+                    imgArray[i].style.width = imgWidth + "px";
+                    imgArray[i].style.height = imgHeight + "px";
+                }
+                imgArray[0].src = "image/空白.jpg"
+
+            }
+            function imgFrame() {
+                /* 改變內框的大小 */
+                var imgframe = document.getElementsByClassName("imgFrame");
+                for (var i = 0; i < imgframe.length; i++) {
+                    imgframe[i].style.width = (imgWidth / 4) + "px";
+                    imgframe[i].style.height = (imgHeight / 4) + "px";
+                }
+                imgframe[0].classList.add("Space");
+                imgframe[0].addEventListener("click", determinePosition);
+            }
+            function determinePosition() {
+                /* 判斷上下左右，並掛上交換的方法 */
+                var index = document.getElementsByClassName("Space")[0].id;
+                if (document.getElementById(Number(index) + 1) != null) {
+                    document.getElementById(Number(index) + 1).addEventListener("click", changePosition);
+                }
+                if (document.getElementById(Number(index) - 1) != null) {
+                    document.getElementById(Number(index) - 1).addEventListener("click", changePosition);
+                }
+                if (document.getElementById(Number(index) - 4) != null) {
+                    document.getElementById(Number(index) - 4).addEventListener("click", changePosition);
+                }
+                if (document.getElementById(Number(index) + 4) != null) {
+                    document.getElementById(Number(index) + 4).addEventListener("click", changePosition);
+                }
+            }
+            function changePosition() {
+                /* 交換的方法 */
+                var spacePosition = document.getElementsByClassName("Space")[0];
+                var space_top = spacePosition.style.top;
+                var space_left = spacePosition.style.left;
+                var index_top = this.style.top;
+                var index_left = this.style.left;
+                var space_id = this.id;
+                var index_id = spacePosition.id;
+                spacePosition.id = space_id;
+                this.id = index_id;
+                spacePosition.style.top = index_top;
+                spacePosition.style.left = index_left;
+                this.style.top = space_top;
+                this.style.left = space_left;
+                for (var i = 0; i < document.getElementsByClassName("imgFrame").length; i++) {
+                    document.getElementsByClassName("imgFrame")[i].removeEventListener('click', changePosition);
+                }
+                determineResult();
+            }
+        });
+        function confusionImg() {
+            /* 打亂程式碼 */
+            for (var i = 0; i < 500; i++) {
+                var spacePosition = document.getElementsByClassName("Space")[0];
+                appendClassNamefor_confusionImg();
+                var confusionimg_class = document.getElementsByClassName("confusionimg");
+                var positionArray = new Array();
+                for (var k of confusionimg_class) {
+                    positionArray.push(k);
+                }
+                var randomNumber = Math.floor(Math.random() * positionArray.length);
+                var confusionimg_left = positionArray[randomNumber].style.left;
+                var confusionimg_top = positionArray[randomNumber].style.top;
+                var confusionimg_id = positionArray[randomNumber].id;
+                var space_left = spacePosition.style.left;
+                var space_top = spacePosition.style.top;
+                var space_id = spacePosition.id;
+                confusionimg_class[randomNumber].style.left = space_left;
+                confusionimg_class[randomNumber].style.top = space_top;
+                confusionimg_class[randomNumber].id = space_id;
+                spacePosition.style.left = confusionimg_left;
+                spacePosition.style.top = confusionimg_top;
+                spacePosition.id = confusionimg_id;
+                var a = confusionimg_class.length;
+                for (var k = 0; k < a; k++) {
+                    confusionimg_class[0].classList.remove("confusionimg");
+                }
+            }
+        }
+        function appendClassNamefor_confusionImg() {
+            var index = document.getElementsByClassName("Space")[0].id;
+            if (document.getElementById(Number(index) + 1) != null) {
+                document.getElementById(Number(index) + 1).classList.add("confusionimg");
+            }
+            if (document.getElementById(Number(index) - 1) != null) {
+                document.getElementById(Number(index) - 1).classList.add("confusionimg");
+            }
+            if (document.getElementById(Number(index) - 4) != null) {
+                document.getElementById(Number(index) - 4).classList.add("confusionimg");
+            }
+            if (document.getElementById(Number(index) + 4) != null) {
+                document.getElementById(Number(index) + 4).classList.add("confusionimg");
+            }
+        }
+        function determineResult() {
+            /* 判斷答案是否正確 */
+            var a=new Array();
+            var imgframe = document.getElementsByClassName("imgFrame");
+            for(var i=0;i<imgframe.length;i++){
+                if(imgframe[i].id==String(i)){
+                    a[i]="T";
+                }
+                else{
+                    a[i]="F";
+                }
+            }
+            if(!(a.includes("F"))){
+                alert("恭喜你答對了");
+            }
+        }
+
+    </script>
+</body>
+
+</html>
